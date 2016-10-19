@@ -6,12 +6,14 @@
 <jsp:include page="../../shared/jsp/Header.jsp" flush="false"/>
 
 <section id="main">
+    <div id="messagePlace">
     <ano:equal name="newAccumulatorAdded" value="true">
         <div class="alert alert-warning alert-dismissable">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             Accumulator <ano:write name="newAccumulatorName"/> added!
         </div>
     </ano:equal>
+    </div>
     <div class="content">
 
         <ano:present name="data">
@@ -67,7 +69,8 @@
                         <div class="box-right-nav dropdown">
                             <a href="#" data-target="#" data-toggle="dropdown"><i class="fa fa-cog"></i></a>
                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
-                                <li><a href="" id="save_as">Save</a></li>
+                                <li><a href="" onclick="saveAccumulators(event, saveSvgAs)">Save</a></li>
+                                <li><a href="" onclick="saveAccumulators(event, showSendByEmailDialog)">Send</a></li>
                                 <ano:iF test="${chart.dashboardsToAdd != ''}">
                                     <li><a onclick="addChart('${requestScope.accNamesConcat}','${requestScope.dashboards}')">Add to Dashboard</a></li>
                                 </ano:iF>
@@ -415,9 +418,10 @@
 
 
         <script type="text/javascript">
-        $('#save_as').click( function(event) {
+        function saveAccumulators(event, proc) {
             event.preventDefault();
             event.stopPropagation();
+
             var chartWidth = 1120,
                     chartHeight = 300,
                     margin = 40;
@@ -491,21 +495,14 @@
 
             img.onload = function () {
                 ctx.drawImage(img, 0, 0);
-                var canvasdata = canvas.toDataURL("image/png")
-                var a = document.createElement("a");
-                var file_name = getChartFileName();
-
-                a.download = file_name + ".png";
-                a.href = canvasdata;
-                document.body.appendChild(a);
-                a.click();
-
+                var canvasdata = canvas.toDataURL("image/png");
+                proc(canvasdata, getChartFileName());
             };
-        });
+        };
 
         function getChartFileName() {
             var t = new Date($.now());
-            var current_date = t.getFullYear()+'-'+ t.getMonth()+'-'+ t.getDate()+'__'+t.getHours()+'-'+ t.getMinutes()
+            var current_date = t.getFullYear()+'-'+ t.getMonth()+'-'+ t.getDate()+'__'+t.getHours()+'-'+ t.getMinutes()+'-'+ t.getSeconds();
             return $.trim($('.chart-header').text()).split(' ').join('_')+'_'+current_date;
         }
     </script>

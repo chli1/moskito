@@ -258,6 +258,11 @@
                 "configurationName": "none",
                 "className": "net.anotheria.moskito.extensions.DiskSpaceMonitoringPlugin"
             },
+            {
+              "name": "MailgunChartSenderPlugin",
+              "configurationName": "none",
+              "className": "net.anotheria.moskito.extensions.MailgunChartSenderPlugin"
+            },
           {
             "name": "VisualPoCPlugin",
             "configurationName": "none",

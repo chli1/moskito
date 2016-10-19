@@ -359,6 +359,34 @@ olark.identify('7961-404-10-9387');/*]]>*/</script><noscript><a href="https://ww
 
 <%----------------------------------------------------------------------------------------------%>
 
+<%-------------------------------------- Send svg by mail --------------------------------------%>
+
+<div class="modal fade" id="sendSvgByMail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Send chart by email</h4>
+            </div>
+
+            <div class="modal-body">
+                <form id="sendSvgByMailForm" action="mskSendChartByMailAction" method="POST">
+                    <div class="modal-body">
+                        <input type="hidden" class="form-control" name="pImage" value="blank" id="sendSvgByMailImage">
+                        Chart name: <input class="form-control" name="pName" placeholder="Please enter chart's file name" id="sendSvgByMailName">
+                        Emails: <input class="form-control" name="pEmails" placeholder="Please enter emails, separated by coma" id="sendSvgByMailEmails">
+                    </div>
+                    <div class="form-group text-right">
+                        <button class="btn btn-success" type="button" onclick="sendByEmail(event);">Send</button>
+                        <button class="btn btn-default" type="button" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<%----------------------------------------------------------------------------------------------%>
+
 <ano:present name="gauges">
     <script language="JavaScript">
         function removeGauge(gaugeForRemovalCaption, gaugeForRemovalName, dashboard){
@@ -584,6 +612,43 @@ olark.identify('7961-404-10-9387');/*]]>*/</script><noscript><a href="https://ww
             } else {
                 $("#addElementToDashboard").modal('show');
             }
+        }
+
+        function saveSvgAs(canvasdata, name) {
+            var a = document.createElement("a");
+
+            a.download = name + ".png";
+            a.href = canvasdata;
+            document.body.appendChild(a);
+            a.click();
+        }
+
+        function showSendByEmailDialog(canvasdata, name) {
+            $("#sendSvgByMailImage").attr("value", canvasdata);
+            $("#sendSvgByMailName").attr("value", name+".png");
+            $("#sendSvgByMail").modal('show');
+        }
+
+        function sendByEmail(event) {
+//            event.preventDefault();
+//            event.stopPropagation();
+
+            $("#sendSvgByMail").modal('hide');
+            $.ajax({
+                type: "POST",
+                url: "mskSendChartByMailAction",
+                data: $("#sendSvgByMailForm").serialize(),
+                success: function (data) {
+                    if (typeof data.data.message !== 'undefined') {
+                        var textToAdd =
+                            "<div class='alert alert-warning alert-dismissable'>" +
+                                "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" +
+                                data.data.message +
+                            "</div>";
+                        $("#messagePlace").html(textToAdd);
+                    }
+                }
+            });
         }
     </script>
 </ano:present>

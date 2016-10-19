@@ -7,6 +7,7 @@
 <jsp:include page="../../shared/jsp/Header.jsp" flush="false"/>
 
 <section id="main">
+    <div id="messagePlace">
     <ano:equal name="showHelp" value="true">
         <div class="alert alert-warning alert-dismissable">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -20,6 +21,7 @@
             ${requestScope.infoMessage}
         </div>
     </ano:present>
+    </div>
 
     <div class="content">
         <ano:equal name="thresholdsPresent" value="true">
@@ -179,7 +181,8 @@
                             <div class="box-right-nav dropdown">
                                 <a href="#" data-target="#" data-toggle="dropdown"><i class="fa fa-cog"></i></a>
                                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
-                                    <li><a href="" onclick="saveSvgAsPng(event, ${index}+countGauges())">Save</a></li>
+                                    <li><a href="" onclick="saveSvgAsPng(event, ${index}+countGauges(), saveSvgAs)">Save</a></li>
+                                    <li><a href="" onclick="saveSvgAsPng(event, ${index}+countGauges(), showSendByEmailDialog)">Send</a></li>
                                     <ano:iF test="${chart.dashboardsToAdd != ''}">
                                         <li><a onclick="addChart('${chart.chartNames}','${chart.dashboardsToAdd}')">Add to Dashboard</a></li>
                                     </ano:iF>
@@ -241,7 +244,7 @@
             function countGauges() {
                 return $('.gauge').length;
             }
-            function saveSvgAsPng(event, index) {
+            function saveSvgAsPng(event, index, proc) {
                 event.preventDefault();
                 event.stopPropagation();
 
@@ -317,19 +320,12 @@
                 img.onload = function () {
                     ctx.drawImage(img, 0, 0);
                     var canvasdata = canvas.toDataURL("image/png");
-                    var a = document.createElement("a");
-                    var file_name = getChartFileName(index);
-
-                    a.download = file_name + ".png";
-                    a.href = canvasdata;
-                    document.body.appendChild(a);
-                    a.click();
-
+                    proc(canvasdata, getChartFileName(index));
                 };
             }
             function getChartFileName(index) {
                 var t = new Date($.now());
-                var current_date = t.getFullYear()+'-'+ t.getMonth()+'-'+ t.getDate()+'__'+t.getHours()+'-'+ t.getMinutes();
+                var current_date = t.getFullYear()+'-'+ t.getMonth()+'-'+ t.getDate()+'__'+t.getHours()+'-'+ t.getMinutes()+'-'+ t.getSeconds();
                 var chart_header = document.getElementsByClassName("chart-header")[index];
                 return $.trim(chart_header.innerText).split(' ').join('_')+'_'+current_date;
             }

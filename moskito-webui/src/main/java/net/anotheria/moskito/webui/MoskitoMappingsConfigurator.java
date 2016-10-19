@@ -16,6 +16,7 @@ import net.anotheria.moskito.webui.dashboards.action.DashboardRemoveChartAction;
 import net.anotheria.moskito.webui.dashboards.action.DashboardRemoveGaugeAction;
 import net.anotheria.moskito.webui.dashboards.action.DashboardRemoveThresholdAction;
 import net.anotheria.moskito.webui.dashboards.action.DeleteDashboardAction;
+import net.anotheria.moskito.webui.dashboards.action.SendChartByMailAction;
 import net.anotheria.moskito.webui.dashboards.action.ShowDashboardAction;
 import net.anotheria.moskito.webui.gauges.action.ShowGaugesAction;
 import net.anotheria.moskito.webui.journey.action.AnalyzeJourneyAction;
@@ -256,6 +257,7 @@ public class MoskitoMappingsConfigurator implements ActionMappingsConfigurator{
 		mappings.addMapping("mskSaveNavMenuState", SaveNavMenuStateAction.class);
 		mappings.addMapping("mskGetExplanationsByName", GetExplanationsByDecoratorNameAction.class);
 		mappings.addMapping("mskGetThresholdDefinition", GetThresholdDefinitionAction.class);
+		mappings.addMapping("mskSendChartByMailAction", SendChartByMailAction.class);
 
 		//errors
 		mappings.setOnError(new ActionForward("error", "/net/anotheria/moskito/webui/shared/jsp/Error.jsp"));
